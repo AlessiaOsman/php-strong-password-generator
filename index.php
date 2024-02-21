@@ -1,12 +1,14 @@
 <?php
 
+
+
+
+include __DIR__ . '/includes/data/data.php';
+include __DIR__ . '/includes/utils/functions.php';
+
 $psw_length = $_GET['length'] ?? '';
 
-$psw = '';
 
-$numbers = [1,2,3,4,5,6,7,8,9];
-$letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-$symbols = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '[', ']', '{', '}', ';', ':', ',', '.', '/', '?'];
 
 
 $characters = array_merge($numbers, $letters, $symbols);
@@ -15,12 +17,12 @@ $characters = array_merge($numbers, $letters, $symbols);
 
 
 if(!empty($psw_length)){
+   $psw_generated = generate_password($psw_length, $characters);
 
-    for($i= 0; $i < $psw_length; $i++){
-            $array_position = random_int(0,58);
-            $psw .= $characters[$array_position];
-        }
-    }
+   session_start();
+   $_SESSION['password'] = $psw_generated;
+   header('Location: password.php');
+}
 
 
 
@@ -43,7 +45,7 @@ if(!empty($psw_length)){
             <header class="text-center">
                 <h1 class="text-secondary">Strong password generator</h1>
                 <h2 class="text-white">Genera una password sicura</h2>
-                <p class="text-white"><?=$psw?></p>
+               
             </header>
             <main>
                 <div class="card p-5 mt-5">
