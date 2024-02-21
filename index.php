@@ -1,29 +1,20 @@
 <?php
-
-
-
-
 include __DIR__ . '/includes/data/data.php';
 include __DIR__ . '/includes/utils/functions.php';
 
-$psw_length = $_GET['length'] ?? '';
-
-
-
-
+$psw_length = $_GET['length'] ?? NULL;
 $characters = array_merge($numbers, $letters, $symbols);
+$length_is_set = isset($_GET['length']);
+$alert_class = 'alert-danger';
+$alert_message = 'Non è stato possibile';
 
+if (!empty($psw_length)) {
+    $psw_generated = generate_password($psw_length, $characters);
 
-
-
-if(!empty($psw_length)){
-   $psw_generated = generate_password($psw_length, $characters);
-
-   session_start();
-   $_SESSION['password'] = $psw_generated;
-   header('Location: password.php');
+    session_start();
+    $_SESSION['password'] = $psw_generated;
+    header('Location: password.php');
 }
-
 
 
 ?>
@@ -45,7 +36,12 @@ if(!empty($psw_length)){
             <header class="text-center">
                 <h1 class="text-secondary">Strong password generator</h1>
                 <h2 class="text-white">Genera una password sicura</h2>
-               
+                <?php if ($length_is_set):?>
+                    <div class="alert <?=$alert_class?>" role="alert">
+                        <?=$alert_message?>
+                    </div>
+                <?php endif ?>
+
             </header>
             <main>
                 <div class="card p-5 mt-5">
@@ -58,8 +54,8 @@ if(!empty($psw_length)){
                                 </div>
                             </div>
                             <div class="d-flex gap-3">
-                            <button type="submit" class="btn btn-primary">Sign in</button>
-                            <button type="submit" class="btn btn-secondary">Annulla</button>
+                                <button type="submit" class="btn btn-primary">Sign in</button>
+                                <button type="submit" class="btn btn-secondary">Annulla</button>
                             </div>
                         </form>
                     </div>
